@@ -13,9 +13,9 @@ import (
 // weather service example implementation.
 // The example methods log the requests and return zero values.
 type weatherController struct {
-	logger zerolog.Logger
-	weatherService *services.WeatherService
-	tempUnitService *services.TempUnitService
+	logger           zerolog.Logger
+	weatherService   *services.WeatherService
+	tempUnitService  *services.TempUnitService
 	speedUnitService *services.SpeedUnitService
 }
 
@@ -44,7 +44,7 @@ func (s *weatherController) Create(_ context.Context, p *weather.Weather) (res *
 	if p.Temperature != nil {
 		if p.Temperature.Unit != nil && p.Temperature.Value != nil {
 			switch *p.Temperature.Unit {
-			case "C", "F","K":
+			case "C", "F", "K":
 				// ok, get the appropriate tempUnit model
 				var tempUnit models.TempUnit
 				tempUnit, err = s.tempUnitService.GetByUnit(*p.Temperature.Unit)
@@ -165,7 +165,7 @@ func (s *weatherController) Update(_ context.Context, p *weather.Weather) (res *
 	if p.Temperature != nil {
 		if p.Temperature.Unit != nil && p.Temperature.Value != nil {
 			switch *p.Temperature.Unit {
-			case "C", "F","K":
+			case "C", "F", "K":
 				// ok, get the appropriate tempUnit model
 				var tempUnit models.TempUnit
 				tempUnit, err = s.tempUnitService.GetByUnit(*p.Temperature.Unit)

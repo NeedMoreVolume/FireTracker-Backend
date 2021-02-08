@@ -1,6 +1,6 @@
 package design
 
-import 	. "goa.design/goa/v3/dsl"
+import . "goa.design/goa/v3/dsl"
 
 var _ = Service("weather", func() {
 	Description("The fire service creates new weather datas for fires, and gets/lists weather data")
@@ -135,13 +135,13 @@ var Wind = Type("Wind", func() {
 	Field(2, "direction", String, "wind direction", func() {
 		Enum("S", "SE", "E", "NE", "N", "NW", "W", "SW")
 	})
-	Field(3,"unit", String, "measurement unit", func() {
+	Field(3, "unit", String, "measurement unit", func() {
 		Enum("KPH", "MPH")
 	})
 })
 
 var Temperature = Type("Temperature", func() {
-	Field(1,"unit", String, "measurement unit", func() {
+	Field(1, "unit", String, "measurement unit", func() {
 		Enum("K", "C", "F")
 	})
 	Field(2, "value", Int32, "temperature value")

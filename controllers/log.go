@@ -15,7 +15,7 @@ import (
 // log service example implementation.
 // The example methods log the requests and return zero values.
 type logController struct {
-	logger zerolog.Logger
+	logger     zerolog.Logger
 	logService *services.LogService
 }
 
@@ -50,10 +50,10 @@ func (s *logController) Create(_ context.Context, p *logSvc.Log) (res *logSvc.Lo
 		return
 	}
 	newLog := models.Log{
-		FireID:    fireID,
-		Name:      *p.Name,
-		Size:      *p.Size,
-		AddedAt:   addedAt,
+		FireID:  fireID,
+		Name:    *p.Name,
+		Size:    *p.Size,
+		AddedAt: addedAt,
 	}
 	var weatherID *uint
 	if p.Weather != nil {

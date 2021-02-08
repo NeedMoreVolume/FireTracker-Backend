@@ -1,6 +1,6 @@
 package design
 
-import 	. "goa.design/goa/v3/dsl"
+import . "goa.design/goa/v3/dsl"
 
 var _ = Service("fire", func() {
 	Description("The fire service creates new fires, updates data for a fire, deletes fires, and gets/lists fires")

@@ -8,7 +8,7 @@ import (
 
 type TempUnitService struct {
 	logger zerolog.Logger
-	db *gorm.DB
+	db     *gorm.DB
 }
 
 // NewWeather returns the weather service implementation.

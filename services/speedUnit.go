@@ -8,7 +8,7 @@ import (
 
 type SpeedUnitService struct {
 	logger zerolog.Logger
-	db *gorm.DB
+	db     *gorm.DB
 }
 
 func NewSpeedUnit(logger zerolog.Logger, db *gorm.DB) *SpeedUnitService {

@@ -30,7 +30,6 @@ func fireToTransport(model models.Fire) (out *fire.Fire) {
 		}
 	}
 
-
 	if model.DeletedAt.Valid {
 		deletedAt := model.DeletedAt.Time.Format(time.RFC3339)
 		out.DeletedAt = &deletedAt
@@ -63,22 +62,22 @@ func fireWeatherToTransport(model models.Weather) (out *fire.Weather) {
 	}
 
 	out = &fire.Weather{
-		ID:          &id,
-		CreatedAt:   &createdAt,
+		ID:        &id,
+		CreatedAt: &createdAt,
 
 		Temperature: &fire.Temperature{
 			Value: &temp,
 			Unit:  &tempUnit,
 		},
-		Humidity:    &humidity,
-		DewPoint:    &fire.Temperature{
+		Humidity: &humidity,
+		DewPoint: &fire.Temperature{
 			Value: &dewPoint,
 			Unit:  &dewUnit,
 		},
-		Wind:        &fire.Wind{
+		Wind: &fire.Wind{
 			Speed:     &windSpeed,
 			Direction: &model.WindDirection,
-			Unit: 	   &windUnit,
+			Unit:      &windUnit,
 		},
 		WeatherType: &model.Type,
 		WeatherTime: &wt,
@@ -107,17 +106,17 @@ func weatherToTransport(model models.Weather) (out *weather.Weather) {
 	wt := model.WeatherTime.Format(time.RFC3339)
 
 	out = &weather.Weather{
-		ID:          &id,
-		CreatedAt:   &createdAt,
+		ID:        &id,
+		CreatedAt: &createdAt,
 
 		Temperature: &weather.Temperature{
 			Value: &temp,
 		},
-		Humidity:    &humidity,
-		DewPoint:    &weather.Temperature{
+		Humidity: &humidity,
+		DewPoint: &weather.Temperature{
 			Value: &dewPoint,
 		},
-		Wind:        &weather.Wind{
+		Wind: &weather.Wind{
 			Speed:     &windSpeed,
 			Direction: &model.WindDirection,
 		},

@@ -10,7 +10,7 @@ import (
 
 type WeatherService struct {
 	logger zerolog.Logger
-	db *gorm.DB
+	db     *gorm.DB
 }
 
 // NewFire returns the fire service implementation.

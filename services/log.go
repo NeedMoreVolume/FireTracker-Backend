@@ -10,7 +10,7 @@ import (
 
 type LogService struct {
 	logger zerolog.Logger
-	db *gorm.DB
+	db     *gorm.DB
 }
 
 // NewLog returns the log service implementation.

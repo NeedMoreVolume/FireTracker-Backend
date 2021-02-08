@@ -54,9 +54,9 @@ func handleHTTPServer(ctx context.Context, u *url.URL, fireEndpoints *fire.Endpo
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		fireServer *firesvr.Server
+		fireServer    *firesvr.Server
 		weatherServer *weathersvr.Server
-		logServer *logsvr.Server
+		logServer     *logsvr.Server
 	)
 	{
 		eh := errorHandler(logger)

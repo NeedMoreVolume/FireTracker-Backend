@@ -7,10 +7,10 @@ import (
 
 type Log struct {
 	gorm.Model
-	FireID uint
+	FireID    uint
 	WeatherID *uint
-	Name string
-	Size string
-	AddedAt time.Time
-	Weather Weather // used if providing a weather observation with the log addition
+	Name      string
+	Size      string
+	AddedAt   time.Time
+	Weather   Weather // used if providing a weather observation with the log addition
 }

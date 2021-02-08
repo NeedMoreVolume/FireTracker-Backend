@@ -31,7 +31,7 @@ func main() {
 		grpcPortF = flag.String("grpc-port", "9011", "gRPC port (overrides host gRPC port specified in service design)")
 		secureF   = flag.Bool("secure", false, "Use secure scheme (https or grpcs)")
 		dbgF      = flag.Bool("debug", false, "Log request and response bodies")
-		sqlHost	  = flag.String("sql-host", "127.0.0.1", "SQL host")
+		sqlHost   = flag.String("sql-host", "127.0.0.1", "SQL host")
 		sqlPort   = flag.String("sql-port", "3306", "SQL port")
 		sqlUser   = flag.String("sql-user", "root", "SQL user")
 		sqlPass   = flag.String("sql-pass", "R0ckets#1", "SQL pass")
@@ -88,9 +88,9 @@ func main() {
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		fireEndpoints *fire.Endpoints
+		fireEndpoints    *fire.Endpoints
 		weatherEndpoints *weather.Endpoints
-		logEndpoints *log.Endpoints
+		logEndpoints     *log.Endpoints
 	)
 	{
 		fireEndpoints = fire.NewEndpoints(fireSvc)

@@ -87,7 +87,7 @@ var TimeFilter = Type("TimeFilter", func() {
 })
 
 var Pagination = Type("Pagination", func() {
-	Field(1,"total", Int, "count of the things")
-	Field(2,"page", Int, "page number")
-	Field(3,"limit", Int, "max number of things")
+	Field(1, "total", Int, "count of the things")
+	Field(2, "page", Int, "page number")
+	Field(3, "limit", Int, "max number of things")
 })
