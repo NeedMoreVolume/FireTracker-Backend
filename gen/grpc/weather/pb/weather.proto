@@ -1,0 +1,289 @@
+// Code generated with goa v3.2.5, DO NOT EDIT.
+//
+// weather protocol buffer definition
+//
+// Command:
+// $ goa gen github.com/NeedMoreVolume/FireTracker/design
+
+syntax = "proto3";
+
+package weather;
+
+option go_package = "weatherpb";
+
+// The fire service creates new weather datas for fires, and gets/lists weather
+// data
+service Weather {
+	// Create a weather observation and optional payloads
+	rpc Create (CreateRequest) returns (CreateResponse);
+	// Get a specific piece of weather data
+	rpc Get (GetRequest) returns (GetResponse);
+	// Update something about a weather observation specifically
+	rpc Update (UpdateRequest) returns (UpdateResponse);
+	// Delete a weather observation
+	rpc Delete (DeleteRequest) returns (DeleteResponse);
+	// List weather
+	rpc List (ListRequest) returns (ListResponse);
+}
+
+message CreateRequest {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// ID of the fire
+	sint32 fire_id = 3;
+	// ID of the log
+	sint32 log_id = 4;
+	// temperature
+	Temperature temperature = 5;
+	// humidity level
+	sint32 humidity = 6;
+	// dew point
+	Temperature dew_point = 7;
+	// wind data
+	Wind wind = 8;
+	// type of weather
+	string weather_type = 9;
+	string weather_time = 10;
+}
+
+message Temperature {
+	// measurement unit
+	string unit = 1;
+	// temperature value
+	sint32 value = 2;
+}
+
+message Wind {
+	// wind speed
+	sint32 speed = 1;
+	// wind direction
+	string direction = 2;
+	// measurement unit
+	string unit = 3;
+}
+
+message CreateResponse {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// ID of the fire
+	sint32 fire_id = 3;
+	// ID of the log
+	sint32 log_id = 4;
+	// temperature
+	Temperature temperature = 5;
+	// humidity level
+	sint32 humidity = 6;
+	// dew point
+	Temperature dew_point = 7;
+	// wind data
+	Wind wind = 8;
+	// type of weather
+	string weather_type = 9;
+	string weather_time = 10;
+}
+
+message GetRequest {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// ID of the fire
+	sint32 fire_id = 3;
+	// ID of the log
+	sint32 log_id = 4;
+	// temperature
+	Temperature temperature = 5;
+	// humidity level
+	sint32 humidity = 6;
+	// dew point
+	Temperature dew_point = 7;
+	// wind data
+	Wind wind = 8;
+	// type of weather
+	string weather_type = 9;
+	string weather_time = 10;
+}
+
+message GetResponse {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// ID of the fire
+	sint32 fire_id = 3;
+	// ID of the log
+	sint32 log_id = 4;
+	// temperature
+	Temperature temperature = 5;
+	// humidity level
+	sint32 humidity = 6;
+	// dew point
+	Temperature dew_point = 7;
+	// wind data
+	Wind wind = 8;
+	// type of weather
+	string weather_type = 9;
+	string weather_time = 10;
+}
+
+message UpdateRequest {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// ID of the fire
+	sint32 fire_id = 3;
+	// ID of the log
+	sint32 log_id = 4;
+	// temperature
+	Temperature temperature = 5;
+	// humidity level
+	sint32 humidity = 6;
+	// dew point
+	Temperature dew_point = 7;
+	// wind data
+	Wind wind = 8;
+	// type of weather
+	string weather_type = 9;
+	string weather_time = 10;
+}
+
+message UpdateResponse {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// ID of the fire
+	sint32 fire_id = 3;
+	// ID of the log
+	sint32 log_id = 4;
+	// temperature
+	Temperature temperature = 5;
+	// humidity level
+	sint32 humidity = 6;
+	// dew point
+	Temperature dew_point = 7;
+	// wind data
+	Wind wind = 8;
+	// type of weather
+	string weather_type = 9;
+	string weather_time = 10;
+}
+
+message DeleteRequest {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// ID of the fire
+	sint32 fire_id = 3;
+	// ID of the log
+	sint32 log_id = 4;
+	// temperature
+	Temperature temperature = 5;
+	// humidity level
+	sint32 humidity = 6;
+	// dew point
+	Temperature dew_point = 7;
+	// wind data
+	Wind wind = 8;
+	// type of weather
+	string weather_type = 9;
+	string weather_time = 10;
+}
+
+message DeleteResponse {
+}
+
+message ListRequest {
+	// product filters to apply
+	WeatherFilters filters = 1;
+	// product search to apply
+	WeatherSearch search = 2;
+	// product sort to apply
+	WeatherSorts sort = 3;
+	// product pagination to apply
+	WeatherPagination pagination = 4;
+}
+// list weather payload for weather
+message WeatherFilters {
+	repeated TimeFilter time = 1;
+	repeated NumberFilter wind_speed = 2;
+	repeated NumberFilter temperature = 3;
+	repeated NumberFilter humidity = 4;
+}
+
+message TimeFilter {
+	// filter key
+	string key = 1;
+	// operator value
+	string operator = 2;
+	// filter value
+	sint32 value = 3;
+}
+
+message NumberFilter {
+	// filter key
+	string key = 1;
+	// operator value
+	string operator = 2;
+	// filter value
+	sint32 value = 3;
+}
+// list search payload for products, with each field representing a valid
+// search key
+message WeatherSearch {
+	string name = 1;
+	string description = 2;
+}
+// list sort payload for products, with each field representing a valid sort key
+message WeatherSorts {
+	string id = 1;
+}
+// list pagination for products
+message WeatherPagination {
+	sint32 page = 1;
+	sint32 limit = 2;
+}
+
+message ListResponse {
+	// weather results
+	repeated Weather2 weathers = 1;
+	// pagination info
+	Pagination pagination = 2;
+}
+
+message Weather2 {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// ID of the fire
+	sint32 fire_id = 3;
+	// ID of the log
+	sint32 log_id = 4;
+	// temperature
+	Temperature temperature = 5;
+	// humidity level
+	sint32 humidity = 6;
+	// dew point
+	Temperature dew_point = 7;
+	// wind data
+	Wind wind = 8;
+	// type of weather
+	string weather_type = 9;
+	string weather_time = 10;
+}
+
+message Pagination {
+	// count of the things
+	sint32 total = 1;
+	// page number
+	sint32 page = 2;
+	// max number of things
+	sint32 limit = 3;
+}

@@ -1,0 +1,308 @@
+// Code generated with goa v3.2.5, DO NOT EDIT.
+//
+// fire protocol buffer definition
+//
+// Command:
+// $ goa gen github.com/NeedMoreVolume/FireTracker/design
+
+syntax = "proto3";
+
+package fire;
+
+option go_package = "firepb";
+
+// The fire service creates new fires, updates data for a fire, deletes fires,
+// and gets/lists fires
+service Fire {
+	// Create a fire and optional payloads
+	rpc Create (CreateRequest) returns (CreateResponse);
+	// Get fire and data friends
+	rpc Get (GetRequest) returns (GetResponse);
+	// Update something about a fire specifically
+	rpc Update (UpdateRequest) returns (UpdateResponse);
+	// Update something about a fire specifically
+	rpc Delete (DeleteRequest) returns (DeleteResponse);
+	// List fires
+	rpc List (ListRequest) returns (ListResponse);
+	// Gets a list of weather for a fire
+	rpc GetWeatherForFire (GetWeatherForFireRequest) returns (GetWeatherForFireResponse);
+	// Gets a list of logs for a fire
+	rpc GetLogsForFire (GetLogsForFireRequest) returns (GetLogsForFireResponse);
+}
+
+message CreateRequest {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// name
+	string updated_at = 3;
+	// name
+	string deleted_at = 4;
+	// name
+	string name = 5;
+	// description
+	string description = 6;
+	// start time of fire
+	string start = 7;
+	// end time of fire
+	string end = 8;
+}
+
+message CreateResponse {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// name
+	string updated_at = 3;
+	// name
+	string deleted_at = 4;
+	// name
+	string name = 5;
+	// description
+	string description = 6;
+	// start time of fire
+	string start = 7;
+	// end time of fire
+	string end = 8;
+}
+
+message GetRequest {
+	// fire id
+	sint32 id = 1;
+}
+
+message GetResponse {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// name
+	string updated_at = 3;
+	// name
+	string deleted_at = 4;
+	// name
+	string name = 5;
+	// description
+	string description = 6;
+	// start time of fire
+	string start = 7;
+	// end time of fire
+	string end = 8;
+}
+
+message UpdateRequest {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// name
+	string updated_at = 3;
+	// name
+	string deleted_at = 4;
+	// name
+	string name = 5;
+	// description
+	string description = 6;
+	// start time of fire
+	string start = 7;
+	// end time of fire
+	string end = 8;
+}
+
+message UpdateResponse {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// name
+	string updated_at = 3;
+	// name
+	string deleted_at = 4;
+	// name
+	string name = 5;
+	// description
+	string description = 6;
+	// start time of fire
+	string start = 7;
+	// end time of fire
+	string end = 8;
+}
+
+message DeleteRequest {
+	// fire id
+	sint32 id = 1;
+}
+
+message DeleteResponse {
+}
+
+message ListRequest {
+	// product filters to apply
+	FireFilters filters = 1;
+	// product search to apply
+	FireSearch search = 2;
+	// product sort to apply
+	FireSorts sort = 3;
+	// product pagination to apply
+	FirePagination pagination = 4;
+}
+// list filter payload for fires, with each field representing a valid filter
+// key
+message FireFilters {
+	repeated StringFilter name = 1;
+	repeated TimeFilter start = 2;
+	repeated TimeFilter end = 3;
+}
+
+message StringFilter {
+	// filter key
+	string key = 1;
+	// operator value
+	string operator = 2;
+	// filter value
+	string value = 3;
+}
+
+message TimeFilter {
+	// filter key
+	string key = 1;
+	// operator value
+	string operator = 2;
+	// filter value
+	sint32 value = 3;
+}
+// list search payload for products, with each field representing a valid
+// search key
+message FireSearch {
+	string name = 1;
+	string description = 2;
+}
+// list sort payload for fires, with each field representing a valid sort key
+message FireSorts {
+	string id = 1;
+	string start = 2;
+	string end = 3;
+}
+// list pagination for products
+message FirePagination {
+	sint32 page = 1;
+	sint32 limit = 2;
+}
+
+message ListResponse {
+	// list of fires
+	repeated Fire2 fires = 1;
+	// pagination results
+	Pagination pagination = 2;
+}
+
+message Fire2 {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// name
+	string updated_at = 3;
+	// name
+	string deleted_at = 4;
+	// name
+	string name = 5;
+	// description
+	string description = 6;
+	// start time of fire
+	string start = 7;
+	// end time of fire
+	string end = 8;
+}
+
+message Pagination {
+	// count of the things
+	sint32 total = 1;
+	// page number
+	sint32 page = 2;
+	// max number of things
+	sint32 limit = 3;
+}
+
+message GetWeatherForFireRequest {
+	// fire id
+	sint32 id = 1;
+}
+
+message GetWeatherForFireResponse {
+	// weather results
+	repeated Weather weathers = 1;
+	// pagination info
+	Pagination pagination = 2;
+}
+
+message Weather {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// ID of the fire
+	sint32 fire_id = 3;
+	// ID of the log
+	sint32 log_id = 4;
+	// temperature
+	Temperature temperature = 5;
+	// humidity level
+	sint32 humidity = 6;
+	// dew point
+	Temperature dew_point = 7;
+	// wind data
+	Wind wind = 8;
+	// type of weather
+	string weather_type = 9;
+	string weather_time = 10;
+}
+
+message Temperature {
+	// measurement unit
+	string unit = 1;
+	// temperature value
+	sint32 value = 2;
+}
+
+message Wind {
+	// wind speed
+	sint32 speed = 1;
+	// wind direction
+	string direction = 2;
+	// measurement unit
+	string unit = 3;
+}
+
+message GetLogsForFireRequest {
+	// fire id
+	sint32 id = 1;
+}
+
+message GetLogsForFireResponse {
+	// logs
+	repeated Log logs = 1;
+	// pagination results
+	Pagination pagination = 2;
+}
+
+message Log {
+	// id
+	sint32 id = 1;
+	// name
+	string created_at = 2;
+	// name
+	string updated_at = 3;
+	// name
+	string name = 5;
+	// size of log
+	string size = 6;
+	// Fire identifier log belongs to
+	sint32 fire_id = 7;
+	// time log was added to fire
+	string added_at = 8;
+	// weather data at time log was added to fire
+	Weather weather = 9;
+}
