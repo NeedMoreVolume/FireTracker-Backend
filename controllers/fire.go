@@ -6,7 +6,6 @@ import (
 	"github.com/NeedMoreVolume/FireTracker/models"
 	"github.com/NeedMoreVolume/FireTracker/services"
 	"github.com/rs/zerolog"
-	"gorm.io/gorm"
 	"time"
 
 	"github.com/NeedMoreVolume/FireTracker/gen/fire"
@@ -89,20 +88,17 @@ func (s *fireController) Update(_ context.Context, p *fire.Fire) (res *fire.Fire
 	s.logger.Debug().Msg("fire.update")
 	res = &fire.Fire{}
 
-	cat, err := time.Parse(time.RFC3339, *p.CreatedAt)
-	if err != nil {
-		s.logger.Printf("failed to parse start time: %s", *p.Start)
-		err = fire.MakeBadRequest(err)
+	if p.ID == nil {
+		err = fire.MakeBadRequest(errors.New("id is required"))
 		return
 	}
-	// TODO: do a get first to make sure we get the right thing or if there is nothing to update
-	fireUpdate := models.Fire{
-		Model: gorm.Model{
-			ID:        uint(*p.ID),
-			CreatedAt: cat,
-			UpdatedAt: time.Now(),
-		},
+
+	var fireUpdate models.Fire
+	fireUpdate, err = s.fireService.Get(uint(*p.ID))
+	if err != nil {
+		return
 	}
+
 	if p.Name != nil {
 		fireUpdate.Name = *p.Name
 	}
@@ -185,7 +181,7 @@ func (s *fireController) GetWeatherForFire(_ context.Context, p *fire.GetWeather
 
 	total := int(count)
 	res = &fire.WeatherList{
-		Weathers:   []*fire.Weather{},
+		Weathers: []*fire.Weather{},
 		Pagination: &fire.Pagination{
 			Total: &total,
 		},
@@ -213,7 +209,7 @@ func (s *fireController) GetLogsForFire(_ context.Context, p *fire.GetLogsForFir
 
 	total := int(count)
 	res = &fire.LogList{
-		Logs:       []*fire.Log{},
+		Logs: []*fire.Log{},
 		Pagination: &fire.Pagination{
 			Total: &total,
 		},
