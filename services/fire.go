@@ -37,10 +37,13 @@ func (s *FireService) Create(fire models.Fire) (out models.Fire, err error) {
 // Get fire and data friends
 func (s *FireService) Get(id uint) (out models.Fire, err error) {
 
-	err = s.db.First(&out, id).Error
+	err = s.db.Preload("Weather").Preload("Logs").Preload("Logs.Weather").First(&out, id).Error
 	if err != nil {
 		s.logger.Error().Err(err).Msgf("failed to find fire %d", id)
 	}
+
+	s.logger.Debug().Msgf("len of logs: %d", len(out.Logs))
+	s.logger.Debug().Msgf("len of weather: %d", len(out.Weather))
 
 	return
 }
@@ -72,7 +75,7 @@ func (s *FireService) Delete(id uint) (err error) {
 // List fires
 func (s *FireService) List(payload *fire.FireListPayload) (out []models.Fire, err error) {
 
-	d := s.db
+	d := s.db.Preload("Weather").Preload("Logs").Preload("Logs.Weather")
 
 	if payload != nil {
 		if payload.Pagination != nil {
@@ -135,6 +138,7 @@ func (s *FireService) List(payload *fire.FireListPayload) (out []models.Fire, er
 	err = d.Find(&out).Count(&total).Error
 	if err != nil {
 		s.logger.Error().Err(err).Msg("failed to find fires")
+		return
 	}
 
 	s.logger.Debug().Msgf("len of fires: %d", len(out))

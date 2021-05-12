@@ -58,36 +58,53 @@ var _ = API("fireTracker", func() {
 })
 
 var StringFilter = Type("StringFilter", func() {
-	Field(1, "key", String, "filter key")
+	Field(1, "key", String, "filter key", func() {
+		Example("name")
+	})
 	Field(2, "operator", String, "operator value", func() {
 		Enum("=", "!=")
 	})
-	Field(3, "value", String, "filter value")
+	Field(3, "value", String, "filter value", func() {
+		Example("Daniel")
+	})
 	Required("key", "operator", "value")
 })
 
 var NumberFilter = Type("NumberFilter", func() {
-	Field(1, "key", String, "filter key")
+	Field(1, "key", String, "filter key", func() {
+		Example("id")
+	})
 	Field(2, "operator", String, "operator value", func() {
 		Enum("=", ">", ">=", "<=", "<")
 	})
-	Field(3, "value", Int, "filter value")
+	Field(3, "value", Int, "filter value", func() {
+		Example(1)
+	})
 	Required("key", "operator", "value")
 })
 
 var TimeFilter = Type("TimeFilter", func() {
 	Field(1, "key", String, "filter key", func() {
-		Format(FormatDateTime)
+		Example("added_at")
 	})
 	Field(2, "operator", String, "operator value", func() {
 		Enum("=", ">", ">=", "<=", "<")
 	})
-	Field(3, "value", Int, "filter value")
+	Field(3, "value", String, "filter value", func() {
+		Format(FormatDateTime)
+		Example("2020-01-01T00:00:00Z")
+	})
 	Required("key", "operator", "value")
 })
 
 var Pagination = Type("Pagination", func() {
-	Field(1, "total", Int, "count of the things")
-	Field(2, "page", Int, "page number")
-	Field(3, "limit", Int, "max number of things")
+	Field(1, "total", Int, "count of the things", func() {
+		Example(15)
+	})
+	Field(2, "page", Int, "page number", func() {
+		Example(1)
+	})
+	Field(3, "limit", Int, "max number of things", func() {
+		Example(10)
+	})
 })

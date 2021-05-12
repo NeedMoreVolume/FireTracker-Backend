@@ -24,20 +24,52 @@ func NewLogService(logger zerolog.Logger, db *gorm.DB) *LogService {
 // Create a log
 func (s *LogService) Create(log models.Log) (out models.Log, err error) {
 
-	err = s.db.Create(&log).Error
+	weather := log.Weather
+	log.Weather = models.Weather{}
+	// start transaction
+	tx := s.db.Begin()
+	// make log
+	err = tx.Create(&log).Error
 	if err != nil {
 		s.logger.Error().Err(err).Msg("could not create log")
+		// roll back transaction
+		tx.Rollback()
+		return
 	}
-
 	out = log
 
+	// make weather if provided
+	if weather != log.Weather {
+		weather.LogID = &log.ID
+
+		err = tx.Create(&weather).Error
+		if err != nil {
+			s.logger.Error().Err(err).Msg("could not create log")
+			// roll back transaction
+			tx.Rollback()
+			return
+		}
+		out.Weather = weather
+		out.WeatherID = &weather.ID
+	}
+
+	err = tx.Save(&out).Error
+	if err != nil {
+		s.logger.Error().Err(err).Msg("could not associate weather to log")
+		// roll back transaction
+		tx.Rollback()
+		return
+	}
+
+	// commit transaction
+	err = tx.Commit().Error
 	return
 }
 
 // Get fire
 func (s *LogService) Get(id uint) (out models.Log, err error) {
 
-	err = s.db.First(&out, id).Error
+	err = s.db.Preload("Weather").First(&out, id).Error
 	if err != nil {
 		s.logger.Error().Err(err).Msgf("failed to find log %d", id)
 	}
@@ -63,7 +95,7 @@ func (s *LogService) Delete(id uint) (err error) {
 
 	err = s.db.Delete(&models.Log{}, id).Error
 	if err != nil {
-		s.logger.Error().Err(err).Msgf("failed to delete fire %d", id)
+		s.logger.Error().Err(err).Msgf("failed to delete log %d", id)
 	}
 
 	return
@@ -72,7 +104,7 @@ func (s *LogService) Delete(id uint) (err error) {
 // List fires
 func (s *LogService) List(payload *logs.LogListPayload) (out []models.Log, count int64, err error) {
 
-	d := s.db
+	d := s.db.Preload("Weather")
 
 	if payload != nil {
 		if payload.Pagination != nil {
@@ -134,6 +166,7 @@ func (s *LogService) List(payload *logs.LogListPayload) (out []models.Log, count
 	err = d.Find(&out).Count(&count).Error
 	if err != nil {
 		s.logger.Error().Err(err).Msgf("failed to find logs")
+		return
 	}
 
 	s.logger.Debug().Msgf("len of logs: %d", len(out))

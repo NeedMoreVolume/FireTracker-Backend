@@ -31,7 +31,7 @@ func main() {
 		grpcPortF = flag.String("grpc-port", "9011", "gRPC port (overrides host gRPC port specified in service design)")
 		secureF   = flag.Bool("secure", false, "Use secure scheme (https or grpcs)")
 		dbgF      = flag.Bool("debug", false, "Log request and response bodies")
-		sqlHost   = flag.String("sql-host", "127.0.0.1", "SQL host")
+		sqlHost   = flag.String("sql-host", "localhost", "SQL host")
 		sqlPort   = flag.String("sql-port", "3306", "SQL port")
 		sqlUser   = flag.String("sql-user", "root", "SQL user")
 		sqlPass   = flag.String("sql-pass", "R0ckets#1", "SQL pass")
@@ -72,14 +72,11 @@ func main() {
 		logSvc     log.Service
 	)
 	{
-		tempUnitService := services.NewTempUnit(logger, db)
-		speedUnitService := services.NewSpeedUnit(logger, db)
-
 		logService := services.NewLogService(logger, db)
 		logSvc = controllers.NewLog(logger, logService)
 
 		weatherService := services.NewWeatherService(logger, db)
-		weatherSvc = controllers.NewWeather(logger, weatherService, tempUnitService, speedUnitService)
+		weatherSvc = controllers.NewWeather(logger, weatherService)
 
 		fireService := services.NewFireService(logger, db)
 		fireSvc = controllers.NewFire(logger, fireService, logService, weatherService)

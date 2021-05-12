@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/NeedMoreVolume/FireTracker/gen/weather"
-	"github.com/NeedMoreVolume/FireTracker/models"
 	"github.com/NeedMoreVolume/FireTracker/services"
 	"github.com/rs/zerolog"
 	"time"
@@ -13,19 +12,15 @@ import (
 // weather service example implementation.
 // The example methods log the requests and return zero values.
 type weatherController struct {
-	logger           zerolog.Logger
-	weatherService   *services.WeatherService
-	tempUnitService  *services.TempUnitService
-	speedUnitService *services.SpeedUnitService
+	logger         zerolog.Logger
+	weatherService *services.WeatherService
 }
 
 // NewWeather returns the weather service implementation.
-func NewWeather(logger zerolog.Logger, ws *services.WeatherService, tus *services.TempUnitService, sus *services.SpeedUnitService) weather.Service {
+func NewWeather(logger zerolog.Logger, ws *services.WeatherService) weather.Service {
 	return &weatherController{
 		logger.With().Str("controller", "weather").Logger(),
 		ws,
-		tus,
-		sus,
 	}
 }
 
@@ -34,84 +29,10 @@ func (s *weatherController) Create(_ context.Context, p *weather.Weather) (res *
 	res = &weather.Weather{}
 	s.logger.Debug().Msg("weather.create")
 
-	newWeather := models.Weather{}
-	if p.WeatherTime != nil {
-		newWeather.WeatherTime, err = time.Parse(time.RFC3339, *p.WeatherTime)
-		if err != nil {
-			err = weather.MakeBadRequest(errors.New("weatherTime must be un RFC3339 format"))
-		}
-	}
-	if p.Temperature != nil {
-		if p.Temperature.Unit != nil && p.Temperature.Value != nil {
-			switch *p.Temperature.Unit {
-			case "C", "F", "K":
-				// ok, get the appropriate tempUnit model
-				var tempUnit models.TempUnit
-				tempUnit, err = s.tempUnitService.GetByUnit(*p.Temperature.Unit)
-				if err != nil {
-					return
-				}
-				newWeather.TempUnit = tempUnit
-				newWeather.TempUnitID = tempUnit.ID
-			default:
-				err = weather.MakeBadRequest(errors.New("invalid temperature type provided"))
-				return
-			}
-			newWeather.Temp = uint(*p.Temperature.Value)
-		}
-	}
-	if p.FireID != nil {
-		fireID := uint(*p.FireID)
-		newWeather.FireID = &fireID
-	}
-	if p.LogID != nil {
-		logID := uint(*p.LogID)
-		newWeather.LogID = &logID
-	}
-	if p.Humidity != nil {
-		newWeather.Humidity = uint(*p.Humidity)
-	}
-	if p.DewPoint != nil {
-		if p.DewPoint.Unit != nil && p.DewPoint.Value != nil {
-			switch *p.DewPoint.Unit {
-			case "C", "F", "K":
-				// ok, get the appropriate tempUnit model
-				var tempUnit models.TempUnit
-				tempUnit, err = s.tempUnitService.GetByUnit(*p.DewPoint.Unit)
-				if err != nil {
-					return
-				}
-				newWeather.DewPointUnit = tempUnit
-				newWeather.DewPointUnitID = tempUnit.ID
-			default:
-				err = weather.MakeBadRequest(errors.New("invalid temperature type provided"))
-				return
-			}
-			newWeather.DewPoint = uint(*p.DewPoint.Value)
-		}
-	}
-	if p.Wind != nil {
-		if p.Wind.Unit != nil && p.Wind.Speed != nil && p.Wind.Direction != nil {
-			switch *p.Wind.Unit {
-			case "KPH", "MPH":
-				// ok, get the appropriate speedUnit model
-				var speedUnit models.SpeedUnit
-				speedUnit, err = s.speedUnitService.GetByUnit(*p.Wind.Unit)
-				if err != nil {
-					return
-				}
-				newWeather.WindUnit = speedUnit
-				newWeather.WindUnitID = speedUnit.ID
-			default:
-				err = weather.MakeBadRequest(errors.New("invalid speed type provided"))
-				return
-			}
-			newWeather.WindSpeed = uint(*p.Wind.Speed)
-			newWeather.WindDirection = *p.Wind.Direction
-		}
-	}
-	if p.WeatherType != nil {
-		newWeather.Type = *p.WeatherType
+	newWeather, err := weatherToModel(p)
+	if err != nil {
+		err = weather.MakeBadRequest(err)
+		return
 	}
 
 	newWeather, err = s.weatherService.Create(newWeather)
@@ -163,22 +84,11 @@ func (s *weatherController) Update(_ context.Context, p *weather.Weather) (res *
 		}
 	}
 	if p.Temperature != nil {
-		if p.Temperature.Unit != nil && p.Temperature.Value != nil {
-			switch *p.Temperature.Unit {
-			case "C", "F", "K":
-				// ok, get the appropriate tempUnit model
-				var tempUnit models.TempUnit
-				tempUnit, err = s.tempUnitService.GetByUnit(*p.Temperature.Unit)
-				if err != nil {
-					return
-				}
-				tempWeather.TempUnit = tempUnit
-				tempWeather.TempUnitID = tempUnit.ID
-			default:
-				err = weather.MakeBadRequest(errors.New("invalid temperature type provided"))
-				return
-			}
-			tempWeather.Temp = uint(*p.Temperature.Value)
+		if p.Temperature.Unit != nil {
+			tempWeather.TempUnit = *p.Temperature.Unit
+		}
+		if p.Temperature.Value != nil {
+			tempWeather.Temp = int64(*p.Temperature.Value)
 		}
 	}
 	if p.FireID != nil {
@@ -193,41 +103,21 @@ func (s *weatherController) Update(_ context.Context, p *weather.Weather) (res *
 		tempWeather.Humidity = uint(*p.Humidity)
 	}
 	if p.DewPoint != nil {
-		if p.DewPoint.Unit != nil && p.DewPoint.Value != nil {
-			switch *p.DewPoint.Unit {
-			case "C", "F", "K":
-				// ok, get the appropriate tempUnit model
-				var tempUnit models.TempUnit
-				tempUnit, err = s.tempUnitService.GetByUnit(*p.DewPoint.Unit)
-				if err != nil {
-					return
-				}
-				tempWeather.DewPointUnit = tempUnit
-				tempWeather.DewPointUnitID = tempUnit.ID
-			default:
-				err = weather.MakeBadRequest(errors.New("invalid temperature type provided"))
-				return
-			}
-			tempWeather.DewPoint = uint(*p.DewPoint.Value)
+		if p.DewPoint.Unit != nil {
+			tempWeather.DewPointUnit = *p.DewPoint.Unit
+		}
+		if p.DewPoint.Value != nil {
+			tempWeather.DewPoint = int64(*p.DewPoint.Value)
 		}
 	}
 	if p.Wind != nil {
-		if p.Wind.Unit != nil && p.Wind.Speed != nil && p.Wind.Direction != nil {
-			switch *p.Wind.Unit {
-			case "KPH", "MPH":
-				// ok, get the appropriate speedUnit model
-				var speedUnit models.SpeedUnit
-				speedUnit, err = s.speedUnitService.GetByUnit(*p.Wind.Unit)
-				if err != nil {
-					return
-				}
-				tempWeather.WindUnit = speedUnit
-				tempWeather.WindUnitID = speedUnit.ID
-			default:
-				err = weather.MakeBadRequest(errors.New("invalid speed type provided"))
-				return
-			}
+		if p.Wind.Unit != nil {
+			tempWeather.WindUnit = *p.Wind.Unit
+		}
+		if p.Wind.Speed != nil {
 			tempWeather.WindSpeed = uint(*p.Wind.Speed)
+		}
+		if p.Wind.Direction != nil {
 			tempWeather.WindDirection = *p.Wind.Direction
 		}
 	}

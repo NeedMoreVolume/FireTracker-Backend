@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// fire transports
 func fireToTransport(model models.Fire) (out *fire.Fire) {
 	id := int(model.ID)
 	createdAt := model.CreatedAt.Format(time.RFC3339)
@@ -35,6 +36,14 @@ func fireToTransport(model models.Fire) (out *fire.Fire) {
 		out.DeletedAt = &deletedAt
 	}
 
+	for _, thisWeather := range model.Weather {
+		out.Weathers = append(out.Weathers, fireWeatherToTransport(thisWeather))
+	}
+
+	for _, thisLog := range model.Logs {
+		out.Logs = append(out.Logs, fireLogToTransport(thisLog))
+	}
+
 	return
 }
 
@@ -49,16 +58,16 @@ func fireWeatherToTransport(model models.Weather) (out *fire.Weather) {
 
 	// units
 	windUnit := "MPH"
-	if model.WindUnit.Unit != "" {
-		windUnit = model.WindUnit.Unit
+	if model.WindUnit != "" {
+		windUnit = model.WindUnit
 	}
 	dewUnit := "K"
-	if model.DewPointUnit.Unit != "" {
-		dewUnit = model.DewPointUnit.Unit
+	if model.DewPointUnit != "" {
+		dewUnit = model.DewPointUnit
 	}
 	tempUnit := "K"
-	if model.TempUnit.Unit != "" {
-		tempUnit = model.TempUnit.Unit
+	if model.TempUnit != "" {
+		tempUnit = model.TempUnit
 	}
 
 	out = &fire.Weather{
@@ -96,6 +105,31 @@ func fireWeatherToTransport(model models.Weather) (out *fire.Weather) {
 	return
 }
 
+func fireLogToTransport(model models.Log) (out *fire.Log) {
+	id := int(model.ID)
+	createdAt := model.CreatedAt.Format(time.RFC3339)
+	updatedAt := model.UpdatedAt.Format(time.RFC3339)
+	fireID := int(model.FireID)
+	addedAt := model.AddedAt.Format(time.RFC3339)
+
+	out = &fire.Log{
+		ID:        &id,
+		CreatedAt: &createdAt,
+		UpdatedAt: &updatedAt,
+		Name:      &model.Name,
+		Size:      &model.Size,
+		FireID:    &fireID,
+		AddedAt:   &addedAt,
+	}
+
+	if model.WeatherID != nil {
+		out.Weather = fireWeatherToTransport(model.Weather)
+	}
+
+	return
+}
+
+// weather transports
 func weatherToTransport(model models.Weather) (out *weather.Weather) {
 	id := int(model.ID)
 	createdAt := model.CreatedAt.Format(time.RFC3339)
@@ -137,22 +171,46 @@ func weatherToTransport(model models.Weather) (out *weather.Weather) {
 	return
 }
 
-func fireLogToTransport(model models.Log) (out *fire.Log) {
+// log transports
+func logWeatherToTransport(model models.Weather) (out *log.Weather) {
 	id := int(model.ID)
 	createdAt := model.CreatedAt.Format(time.RFC3339)
-	updatedAt := model.UpdatedAt.Format(time.RFC3339)
-	fireID := int(model.FireID)
-	addedAt := model.AddedAt.Format(time.RFC3339)
+	temp := int32(model.Temp)
+	humidity := int32(model.Humidity)
+	dewPoint := int32(model.DewPoint)
+	windSpeed := int32(model.WindSpeed)
+	weatherTime := model.WeatherTime.Format(time.RFC3339)
 
-	out = &fire.Log{
+	out = &log.Weather{
 		ID:        &id,
 		CreatedAt: &createdAt,
-		UpdatedAt: &updatedAt,
-		Name:      &model.Name,
-		Size:      &model.Size,
-		FireID:    &fireID,
-		AddedAt:   &addedAt,
+		Temperature: &log.Temperature{
+			Unit:  &model.TempUnit,
+			Value: &temp,
+		},
+		Humidity: &humidity,
+		DewPoint: &log.Temperature{
+			Unit:  &model.DewPointUnit,
+			Value: &dewPoint,
+		},
+		Wind: &log.Wind{
+			Speed:     &windSpeed,
+			Direction: &model.WindDirection,
+			Unit:      &model.WindUnit,
+		},
+		WeatherType: &model.Type,
+		WeatherTime: &weatherTime,
 	}
+
+	if model.LogID != nil {
+		lid := int(*model.LogID)
+		out.LogID = &lid
+	}
+	if model.FireID != nil {
+		fid := int(*model.FireID)
+		out.FireID = &fid
+	}
+
 	return
 }
 
@@ -172,5 +230,9 @@ func logToTransport(model models.Log) (out *log.Log) {
 		FireID:    &fireID,
 		AddedAt:   &addedAt,
 	}
+	if model.WeatherID != nil {
+		out.Weather = logWeatherToTransport(model.Weather)
+	}
+
 	return
 }

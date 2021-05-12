@@ -11,23 +11,24 @@ CREATE TABLE fires (
     end DATETIME
 );
 
-CREATE TABLE weathers (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL,
-    deleted_at DATETIME,
-    fire_id INT,
-    log_id INT,
-    temp INT,
-    temp_unit_id INT,
-    humidity INT,
-    dew_point INT,
-    dew_point_unit_id INT,
-    wind_speed INT,
-    wind_unit_id INT,
-    wind_direction VARCHAR(255),
-    type VARCHAR(255),
-    weather_time DATETIME NOT NULL
+CREATE TABLE weathers
+(
+    id             INT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created_at     DATETIME NOT NULL,
+    updated_at     DATETIME NOT NULL,
+    deleted_at     DATETIME,
+    fire_id        INT,
+    log_id         INT,
+    temp           INT,
+    temp_unit_id   INT,
+    humidity       INT,
+    dew_point      INT,
+    dew_point_unit VARCHAR(45),
+    wind_speed     INT,
+    wind_unit      VARCHAR(45),
+    wind_direction VARCHAR(45),
+    type           VARCHAR(255),
+    weather_time   DATETIME NOT NULL
 );
 
 CREATE TABLE logs (

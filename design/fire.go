@@ -179,14 +179,22 @@ var FireSort = Type("FireSorts", func() {
 
 var FireSearch = Type("FireSearch", func() {
 	Description("list search payload for products, with each field representing a valid search key")
-	Field(1, "name", String)
-	Field(2, "description", String)
+	Field(1, "name", String, func() {
+		Example("Test")
+	})
+	Field(2, "description", String, func() {
+		Example("That time johnny lit the fire with gasoline")
+	})
 })
 
 var FirePagination = Type("FirePagination", func() {
 	Description("list pagination for products")
-	Field(1, "page", Int)
-	Field(2, "limit", Int)
+	Field(1, "page", Int, func() {
+		Example(1)
+	})
+	Field(2, "limit", Int, func() {
+		Example(10)
+	})
 	Required("page", "limit")
 })
 
@@ -200,24 +208,37 @@ var FireListPayload = Type("FireListPayload", func() {
 })
 
 var Fire = Type("Fire", func() {
-	Field(1, "id", Int, "id")
+	Field(1, "id", Int, "id", func() {
+		Example(1)
+	})
 	Field(2, "createdAt", String, "name", func() {
 		Format(FormatDateTime)
+		Example("2020-01-01T00:00:00Z")
 	})
 	Field(3, "updatedAt", String, "name", func() {
 		Format(FormatDateTime)
+		Example("2020-01-01T00:00:00Z")
 	})
 	Field(4, "deletedAt", String, "name", func() {
 		Format(FormatDateTime)
+		Example("2020-01-01T00:00:00Z")
 	})
-	Field(5, "name", String, "name")
-	Field(6, "description", String, "description")
+	Field(5, "name", String, "name", func() {
+		Example("Test Fire")
+	})
+	Field(6, "description", String, "description", func() {
+		Example("My first fire with FireTracker")
+	})
 	Field(7, "start", String, "start time of fire", func() {
 		Format(FormatDateTime)
+		Example("2020-01-01T00:00:00Z")
 	})
 	Field(8, "end", String, "end time of fire", func() {
 		Format(FormatDateTime)
+		Example("2020-01-02T00:00:00Z")
 	})
+	Field(9, "logs", ArrayOf(Log), "list of logs for this fire")
+	Field(10, "weathers", ArrayOf(Weather), "list of weather observations during this fire")
 })
 
 var FireList = Type("FireList", func() {

@@ -1,4 +1,4 @@
-// Code generated with goa v3.2.5, DO NOT EDIT.
+// Code generated with goa v3.3.1, DO NOT EDIT.
 //
 // fire protocol buffer definition
 //
@@ -9,7 +9,7 @@ syntax = "proto3";
 
 package fire;
 
-option go_package = "firepb";
+option go_package = "/firepb";
 
 // The fire service creates new fires, updates data for a fire, deletes fires,
 // and gets/lists fires
@@ -31,108 +31,185 @@ service Fire {
 }
 
 message CreateRequest {
-	// id
+    // id
 	sint32 id = 1;
-	// name
+    // name
 	string created_at = 2;
-	// name
+    // name
 	string updated_at = 3;
-	// name
-	string deleted_at = 4;
-	// name
-	string name = 5;
-	// description
-	string description = 6;
-	// start time of fire
-	string start = 7;
-	// end time of fire
-	string end = 8;
+    // name
+    string deleted_at = 4;
+    // name
+    string name = 5;
+    // description
+    string description = 6;
+    // start time of fire
+    string start = 7;
+    // end time of fire
+    string end = 8;
+    // list of logs for this fire
+    repeated Log logs = 9;
+    // list of weather observations during this fire
+    repeated Weather weathers = 10;
+}
+
+message Log {
+    // id
+    sint32 id = 1;
+    // name
+    string created_at = 2;
+    // name
+    string updated_at = 3;
+    // name
+    string name = 5;
+    // size of log
+    string size = 6;
+    // Fire identifier log belongs to
+    sint32 fire_id = 7;
+    // time log was added to fire
+    string added_at = 8;
+    // weather data at time log was added to fire
+    Weather weather = 9;
+}
+
+message Weather {
+    // id
+    sint32 id = 1;
+    // name
+    string created_at = 2;
+    // ID of the fire
+    sint32 fire_id = 3;
+    // ID of the log
+    sint32 log_id = 4;
+    // temperature
+    Temperature temperature = 5;
+    // humidity level
+    sint32 humidity = 6;
+    // dew point
+    Temperature dew_point = 7;
+    // wind data
+    Wind wind = 8;
+    // type of weather
+    string weather_type = 9;
+    string weather_time = 10;
+}
+
+message Temperature {
+    // measurement unit
+    string unit = 1;
+    // temperature value
+    sint32 value = 2;
+}
+
+message Wind {
+    // wind speed
+    sint32 speed = 1;
+    // wind direction
+    string direction = 2;
+    // measurement unit
+    string unit = 3;
 }
 
 message CreateResponse {
-	// id
-	sint32 id = 1;
-	// name
-	string created_at = 2;
-	// name
-	string updated_at = 3;
-	// name
-	string deleted_at = 4;
-	// name
-	string name = 5;
-	// description
-	string description = 6;
-	// start time of fire
-	string start = 7;
-	// end time of fire
-	string end = 8;
+    // id
+    sint32 id = 1;
+    // name
+    string created_at = 2;
+    // name
+    string updated_at = 3;
+    // name
+    string deleted_at = 4;
+    // name
+    string name = 5;
+    // description
+    string description = 6;
+    // start time of fire
+    string start = 7;
+    // end time of fire
+    string end = 8;
+    // list of logs for this fire
+    repeated Log logs = 9;
+    // list of weather observations during this fire
+    repeated Weather weathers = 10;
 }
 
 message GetRequest {
-	// fire id
-	sint32 id = 1;
+    // fire id
+    sint32 id = 1;
 }
 
 message GetResponse {
-	// id
+    // id
 	sint32 id = 1;
-	// name
+    // name
 	string created_at = 2;
-	// name
+    // name
 	string updated_at = 3;
-	// name
-	string deleted_at = 4;
-	// name
-	string name = 5;
-	// description
-	string description = 6;
-	// start time of fire
-	string start = 7;
-	// end time of fire
-	string end = 8;
+    // name
+    string deleted_at = 4;
+    // name
+    string name = 5;
+    // description
+    string description = 6;
+    // start time of fire
+    string start = 7;
+    // end time of fire
+    string end = 8;
+    // list of logs for this fire
+    repeated Log logs = 9;
+    // list of weather observations during this fire
+    repeated Weather weathers = 10;
 }
 
 message UpdateRequest {
-	// id
-	sint32 id = 1;
-	// name
-	string created_at = 2;
-	// name
-	string updated_at = 3;
-	// name
-	string deleted_at = 4;
-	// name
-	string name = 5;
-	// description
-	string description = 6;
-	// start time of fire
-	string start = 7;
-	// end time of fire
-	string end = 8;
+    // id
+    sint32 id = 1;
+    // name
+    string created_at = 2;
+    // name
+    string updated_at = 3;
+    // name
+    string deleted_at = 4;
+    // name
+    string name = 5;
+    // description
+    string description = 6;
+    // start time of fire
+    string start = 7;
+    // end time of fire
+    string end = 8;
+    // list of logs for this fire
+    repeated Log logs = 9;
+    // list of weather observations during this fire
+    repeated Weather weathers = 10;
 }
 
 message UpdateResponse {
-	// id
-	sint32 id = 1;
-	// name
-	string created_at = 2;
-	// name
-	string updated_at = 3;
-	// name
-	string deleted_at = 4;
-	// name
-	string name = 5;
-	// description
-	string description = 6;
-	// start time of fire
-	string start = 7;
-	// end time of fire
-	string end = 8;
+    // id
+    sint32 id = 1;
+    // name
+    string created_at = 2;
+    // name
+    string updated_at = 3;
+    // name
+    string deleted_at = 4;
+    // name
+    string name = 5;
+    // description
+    string description = 6;
+    // start time of fire
+    string start = 7;
+    // end time of fire
+    string end = 8;
+    // list of logs for this fire
+    repeated Log logs = 9;
+    // list of weather observations during this fire
+    repeated Weather weathers = 10;
 }
 
 message DeleteRequest {
-	// fire id
-	sint32 id = 1;
+    // fire id
+    sint32 id = 1;
 }
 
 message DeleteResponse {
@@ -157,21 +234,21 @@ message FireFilters {
 }
 
 message StringFilter {
-	// filter key
+    // filter key
 	string key = 1;
-	// operator value
+    // operator value
 	string operator = 2;
-	// filter value
-	string value = 3;
+    // filter value
+    string value = 3;
 }
 
 message TimeFilter {
-	// filter key
-	string key = 1;
-	// operator value
-	string operator = 2;
-	// filter value
-	sint32 value = 3;
+    // filter key
+    string key = 1;
+    // operator value
+    string operator = 2;
+    // filter value
+    string value = 3;
 }
 // list search payload for products, with each field representing a valid
 // search key
@@ -199,31 +276,35 @@ message ListResponse {
 }
 
 message Fire2 {
-	// id
+    // id
 	sint32 id = 1;
-	// name
+    // name
 	string created_at = 2;
-	// name
+    // name
 	string updated_at = 3;
-	// name
-	string deleted_at = 4;
-	// name
-	string name = 5;
-	// description
-	string description = 6;
-	// start time of fire
-	string start = 7;
-	// end time of fire
-	string end = 8;
+    // name
+    string deleted_at = 4;
+    // name
+    string name = 5;
+    // description
+    string description = 6;
+    // start time of fire
+    string start = 7;
+    // end time of fire
+    string end = 8;
+    // list of logs for this fire
+    repeated Log logs = 9;
+    // list of weather observations during this fire
+    repeated Weather weathers = 10;
 }
 
 message Pagination {
-	// count of the things
-	sint32 total = 1;
-	// page number
-	sint32 page = 2;
-	// max number of things
-	sint32 limit = 3;
+    // count of the things
+    sint32 total = 1;
+    // page number
+    sint32 page = 2;
+    // max number of things
+    sint32 limit = 3;
 }
 
 message GetWeatherForFireRequest {
@@ -238,44 +319,6 @@ message GetWeatherForFireResponse {
 	Pagination pagination = 2;
 }
 
-message Weather {
-	// id
-	sint32 id = 1;
-	// name
-	string created_at = 2;
-	// ID of the fire
-	sint32 fire_id = 3;
-	// ID of the log
-	sint32 log_id = 4;
-	// temperature
-	Temperature temperature = 5;
-	// humidity level
-	sint32 humidity = 6;
-	// dew point
-	Temperature dew_point = 7;
-	// wind data
-	Wind wind = 8;
-	// type of weather
-	string weather_type = 9;
-	string weather_time = 10;
-}
-
-message Temperature {
-	// measurement unit
-	string unit = 1;
-	// temperature value
-	sint32 value = 2;
-}
-
-message Wind {
-	// wind speed
-	sint32 speed = 1;
-	// wind direction
-	string direction = 2;
-	// measurement unit
-	string unit = 3;
-}
-
 message GetLogsForFireRequest {
 	// fire id
 	sint32 id = 1;
@@ -286,23 +329,4 @@ message GetLogsForFireResponse {
 	repeated Log logs = 1;
 	// pagination results
 	Pagination pagination = 2;
-}
-
-message Log {
-	// id
-	sint32 id = 1;
-	// name
-	string created_at = 2;
-	// name
-	string updated_at = 3;
-	// name
-	string name = 5;
-	// size of log
-	string size = 6;
-	// Fire identifier log belongs to
-	sint32 fire_id = 7;
-	// time log was added to fire
-	string added_at = 8;
-	// weather data at time log was added to fire
-	Weather weather = 9;
 }

@@ -133,14 +133,22 @@ var LogSort = Type("LogSorts", func() {
 
 var LogSearch = Type("LogSearch", func() {
 	Description("list search payload for products, with each field representing a valid search key")
-	Field(1, "name", String)
-	Field(2, "description", String)
+	Field(1, "name", String, func() {
+		Example("Big Log")
+	})
+	Field(2, "description", String, func() {
+		Example("Like a cheese wheel")
+	})
 })
 
 var LogPagination = Type("LogPagination", func() {
 	Description("list pagination for products")
-	Field(1, "page", Int)
-	Field(2, "limit", Int)
+	Field(1, "page", Int, func() {
+		Example(1)
+	})
+	Field(2, "limit", Int, func() {
+		Example(10)
+	})
 	Required("page", "limit")
 })
 
@@ -157,17 +165,24 @@ var Log = Type("Log", func() {
 	Field(1, "id", Int, "id")
 	Field(2, "createdAt", String, "name", func() {
 		Format(FormatDateTime)
+		Example("2020-01-02T00:00:00Z")
 	})
 	Field(3, "updatedAt", String, "name", func() {
 		Format(FormatDateTime)
+		Example("2020-01-02T00:00:00Z")
 	})
-	Field(5, "name", String, "name")
+	Field(5, "name", String, "name", func() {
+		Example("Big Log")
+	})
 	Field(6, "size", String, "size of log", func() {
 		Enum("S", "M", "L", "XL")
 	})
-	Field(7, "fireID", Int, "Fire identifier log belongs to")
+	Field(7, "fireID", Int, "Fire identifier log belongs to", func() {
+		Example(1)
+	})
 	Field(8, "addedAt", String, "time log was added to fire", func() {
 		Format(FormatDateTime)
+		Example("2020-01-02T00:00:00Z")
 	})
 	// optional weather update when adding a log
 	Field(9, "weather", Weather, "weather data at time log was added to fire")

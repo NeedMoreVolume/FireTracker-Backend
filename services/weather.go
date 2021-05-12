@@ -37,7 +37,7 @@ func (s *WeatherService) Create(weather models.Weather) (out models.Weather, err
 // Get fire and data friends
 func (s *WeatherService) Get(id uint) (out models.Weather, err error) {
 
-	err = s.db.Preload("TempUnit").Preload("DewPointUnit").Preload("WindUnit").First(&out, id).Error
+	err = s.db.First(&out, id).Error
 	if err != nil {
 		s.logger.Error().Err(err).Msgf("failed to find fire %d", id)
 	}
@@ -72,29 +72,27 @@ func (s *WeatherService) Delete(id uint) (err error) {
 // List fires
 func (s *WeatherService) List(payload *weather.WeatherListPayload) (out []models.Weather, count int64, err error) {
 
-	d := s.db.Preload("TempUnit").Preload("DewPointUnit").Preload("WindUnit")
-
 	if payload != nil {
 		if payload.Pagination != nil {
 			// apply pagination
-			d = d.Limit(payload.Pagination.Limit)
+			s.db = s.db.Limit(payload.Pagination.Limit)
 			offset := payload.Pagination.Limit * (payload.Pagination.Page - 1)
-			d = d.Offset(offset)
+			s.db = s.db.Offset(offset)
 		}
 		if payload.Sort != nil {
 			// apply sort
 			if payload.Sort.ID != nil {
 				query := fmt.Sprintf("id %s", *payload.Sort.ID)
-				d = d.Order(query)
+				s.db = s.db.Order(query)
 			}
 		}
 		if payload.Search != nil {
 			// apply search
 			if payload.Search.Name != nil {
-				d = d.Where("name LIKE %?%", *payload.Search.Name)
+				s.db = s.db.Where("name LIKE %?%", *payload.Search.Name)
 			}
 			if payload.Search.Description != nil {
-				d = d.Where("description LIKE %?%", *payload.Search.Description)
+				s.db = s.db.Where("description LIKE %?%", *payload.Search.Description)
 			}
 		}
 		if payload.Filters != nil {
@@ -103,29 +101,30 @@ func (s *WeatherService) List(payload *weather.WeatherListPayload) (out []models
 				// apply time filters
 				for _, filter := range payload.Filters.Time {
 					query := fmt.Sprintf("%s %s ?", filter.Key, filter.Operator)
-					d = d.Where(query, filter.Value)
+					s.db = s.db.Where(query, filter.Value)
 				}
 			}
 			if payload.Filters.Humidity != nil {
 				// apply hummidity filters
 				for _, filter := range payload.Filters.Humidity {
 					query := fmt.Sprintf("%s %s ?", filter.Key, filter.Operator)
-					d = d.Where(query, filter.Value)
+					s.db = s.db.Where(query, filter.Value)
 				}
 			}
 			if payload.Filters.Temperature != nil {
 				// apply temp filters
 				for _, filter := range payload.Filters.Temperature {
 					query := fmt.Sprintf("%s %s ?", filter.Key, filter.Operator)
-					d = d.Where(query, filter.Value)
+					s.db = s.db.Where(query, filter.Value)
 				}
 			}
 		}
 	}
 
-	err = d.Find(&out).Count(&count).Error
+	err = s.db.Find(&out).Count(&count).Error
 	if err != nil {
-		s.logger.Error().Err(err).Msgf("failed to find fires")
+		s.logger.Error().Err(err).Msgf("failed to find weathers")
+		return
 	}
 
 	s.logger.Debug().Msgf("len of weathers: %d", len(out))
@@ -136,7 +135,7 @@ func (s *WeatherService) List(payload *weather.WeatherListPayload) (out []models
 
 func (s *WeatherService) ListByFire(fireID uint) (out []models.Weather, count int64, err error) {
 
-	err = s.db.Preload("TempUnit").Preload("DewPointUnit").Preload("WindUnit").Find(&out, "fire_id = ?", fireID).Count(&count).Error
+	err = s.db.Find(&out, "fire_id = ?", fireID).Count(&count).Error
 	if err != nil {
 		s.logger.Error().Err(err).Msgf("failed to find weather for fire %d", fireID)
 	}

@@ -1,4 +1,4 @@
-// Code generated with goa v3.2.5, DO NOT EDIT.
+// Code generated with goa v3.3.1, DO NOT EDIT.
 //
 // log protocol buffer definition
 //
@@ -9,7 +9,7 @@ syntax = "proto3";
 
 package log;
 
-option go_package = "logpb";
+option go_package = "/logpb";
 
 // The fire service creates new fires, updates data for a fire, deletes fires,
 // and gets/lists fires
@@ -219,21 +219,21 @@ message LogFilters {
 }
 
 message StringFilter {
-	// filter key
+    // filter key
 	string key = 1;
-	// operator value
+    // operator value
 	string operator = 2;
-	// filter value
-	string value = 3;
+    // filter value
+    string value = 3;
 }
 
 message TimeFilter {
-	// filter key
-	string key = 1;
-	// operator value
-	string operator = 2;
-	// filter value
-	sint32 value = 3;
+    // filter key
+    string key = 1;
+    // operator value
+    string operator = 2;
+    // filter value
+    string value = 3;
 }
 // list search payload for products, with each field representing a valid
 // search key

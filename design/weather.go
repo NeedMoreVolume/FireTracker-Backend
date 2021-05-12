@@ -112,14 +112,23 @@ var _ = Service("weather", func() {
 })
 
 var Weather = Type("Weather", func() {
-	Field(1, "id", Int, "id")
+	Field(1, "id", Int, "id", func() {
+		Example(1)
+	})
 	Field(2, "createdAt", String, "name", func() {
 		Format(FormatDateTime)
+		Example("2020-01-02T00:00:00Z")
 	})
-	Field(3, "fireID", Int, "ID of the fire")
-	Field(4, "logID", Int, "ID of the log")
+	Field(3, "fireID", Int, "ID of the fire", func() {
+		Example(1)
+	})
+	Field(4, "logID", Int, "ID of the log", func() {
+		Example(1)
+	})
 	Field(5, "temperature", Temperature, "temperature")
-	Field(6, "humidity", Int32, "humidity level")
+	Field(6, "humidity", Int32, "humidity level", func() {
+		Example(1500)
+	})
 	Field(7, "dewPoint", Temperature, "dew point")
 	Field(8, "wind", Wind, "wind data")
 	Field(9, "weatherType", String, "type of weather", func() {
@@ -127,11 +136,14 @@ var Weather = Type("Weather", func() {
 	})
 	Field(10, "weatherTime", String, func() {
 		Format(FormatDateTime)
+		Example("2020-01-02T00:00:00Z")
 	})
 })
 
 var Wind = Type("Wind", func() {
-	Field(1, "speed", Int32, "wind speed")
+	Field(1, "speed", Int32, "wind speed", func() {
+		Example(15)
+	})
 	Field(2, "direction", String, "wind direction", func() {
 		Enum("S", "SE", "E", "NE", "N", "NW", "W", "SW")
 	})
@@ -144,7 +156,9 @@ var Temperature = Type("Temperature", func() {
 	Field(1, "unit", String, "measurement unit", func() {
 		Enum("K", "C", "F")
 	})
-	Field(2, "value", Int32, "temperature value")
+	Field(2, "value", Int32, "temperature value", func() {
+		Example(20)
+	})
 })
 
 var WeatherFilters = Type("WeatherFilters", func() {
@@ -164,14 +178,22 @@ var WeatherSort = Type("WeatherSorts", func() {
 
 var WeatherSearch = Type("WeatherSearch", func() {
 	Description("list search payload for products, with each field representing a valid search key")
-	Field(1, "name", String)
-	Field(2, "description", String)
+	Field(1, "name", String, func() {
+		Example("Windy Part")
+	})
+	Field(2, "description", String, func() {
+		Example("Almost blew the fire out!")
+	})
 })
 
 var WeatherPagination = Type("WeatherPagination", func() {
 	Description("list pagination for products")
-	Field(1, "page", Int)
-	Field(2, "limit", Int)
+	Field(1, "page", Int, func() {
+		Example(1)
+	})
+	Field(2, "limit", Int, func() {
+		Example(10)
+	})
 	Required("page", "limit")
 })
 

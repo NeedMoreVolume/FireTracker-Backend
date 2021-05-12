@@ -1,4 +1,4 @@
-// Code generated with goa v3.2.5, DO NOT EDIT.
+// Code generated with goa v3.3.1, DO NOT EDIT.
 //
 // weather protocol buffer definition
 //
@@ -9,7 +9,7 @@ syntax = "proto3";
 
 package weather;
 
-option go_package = "weatherpb";
+option go_package = "/weatherpb";
 
 // The fire service creates new weather datas for fires, and gets/lists weather
 // data
@@ -213,26 +213,26 @@ message ListRequest {
 message WeatherFilters {
 	repeated TimeFilter time = 1;
 	repeated NumberFilter wind_speed = 2;
-	repeated NumberFilter temperature = 3;
-	repeated NumberFilter humidity = 4;
+    repeated NumberFilter temperature = 3;
+    repeated NumberFilter humidity = 4;
 }
 
 message TimeFilter {
-	// filter key
-	string key = 1;
-	// operator value
-	string operator = 2;
-	// filter value
-	sint32 value = 3;
+    // filter key
+    string key = 1;
+    // operator value
+    string operator = 2;
+    // filter value
+    string value = 3;
 }
 
 message NumberFilter {
-	// filter key
-	string key = 1;
-	// operator value
-	string operator = 2;
-	// filter value
-	sint32 value = 3;
+    // filter key
+    string key = 1;
+    // operator value
+    string operator = 2;
+    // filter value
+    sint32 value = 3;
 }
 // list search payload for products, with each field representing a valid
 // search key

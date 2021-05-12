@@ -35,22 +35,10 @@ func (s *fireController) Create(_ context.Context, p *fire.Fire) (res *fire.Fire
 	res = &fire.Fire{}
 	s.logger.Debug().Msg("fire.create")
 
-	newFire := models.Fire{
-		Start: time.Now(),
-	}
-	if p.Name != nil {
-		newFire.Name = *p.Name
-	}
-	if p.Description != nil {
-		newFire.Description = *p.Description
-	}
-	if p.Start != nil {
-		newFire.Start, err = time.Parse(time.RFC3339, *p.Start)
-		if err != nil {
-			s.logger.Printf("failed to parse start time: %s", *p.Start)
-			err = fire.MakeBadRequest(err)
-			return
-		}
+	newFire, err := fireToModel(p)
+	if err != nil {
+		err = fire.MakeBadRequest(err)
+		return
 	}
 
 	newFire, err = s.fireService.Create(newFire)
